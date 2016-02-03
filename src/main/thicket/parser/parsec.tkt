@@ -126,7 +126,9 @@ trait Parser[a,c] {
                     (a input index consumed' -> 
                         accept a input index $ consumed || consumed'
                     )
-                    reject
+                    (offset consumed' -> 
+                        reject offset $ consumed || consumed'
+                    )
                 )
                 reject        
 
@@ -134,8 +136,9 @@ trait Parser[a,c] {
         parser $ input index ->
             self parse input index fold 
                 accept
-                (offset consumed -> 
-                    consumed fold { reject offset consumed } { q parse input index }
+                (offset consumed -> consumed fold 
+                    { reject offset consumed } 
+                    { q parse input index }
                 )
                 
     // 
