@@ -1,0 +1,116 @@
+/*
+ * Thicket
+ * https://github.com/d-plaindoux/thicket
+ *
+ * Copyright (c) 2015-2016 Didier Plaindoux
+ * Licensed under the LGPL2 license.
+ */
+
+module Test.Data.Parsec
+
+import Data
+
+import Parser.LL
+
+import System.Console
+import System.Runtime
+
+import Spec.Core
+import Spec.Logger.Console
+
+def builtinBasicAssertions : TestLogger -> unit = l -> {
+    description l "Builtin Basic parsers"
+        it "expect (error) to return an error" {
+            let result = error parse "" 0 toTry success in
+                expect result toBe false
+        }
+        it "expect (return true) to return a success" {
+            let result = return true parse "" 0 toOption fold false (t -> t) in
+                expect result toBe true
+        }
+        it "expect (eos) with empty sequence to return a success" {
+            let result = eos parse "" 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (eos) with non empty sequence to return a failure" {
+            let result = eos parse "?" 0 toTry success in
+                expect result toBe false
+        }
+        it "expect (digit) with a [1] sequence to return '1'" {
+            let result = digit parse "1" 0 toOption fold '?' (t -> t) in
+                expect result toBe '1'
+        }
+        it "expect (digit) with a [a] sequence to return a failure" {
+            let result = digit parse "a" 0 toOption fold '?' (t -> t) in
+                expect result toBe '?'
+        }
+        it "expect (lowerCase) with a [a] sequence to return 'a'" {
+            let result = lowerCase parse "a" 0 toOption fold '?' (t -> t) in
+                expect result toBe 'a'
+        }
+        it "expect (lowerCase) with a [A] sequence to return a failure" {
+            let result = lowerCase parse "A" 0 toOption fold '?' (t -> t) in
+                expect result toBe '?'
+        }
+        it "expect (upperCase) with a [A] sequence to return 'A'" {
+            let result = upperCase parse "A" 0 toOption fold '?' (t -> t) in
+                expect result toBe 'A'
+        }
+        it "expect (upperCase) with a [a] sequence to return a failure" {
+            let result = upperCase parse "a" 0 toOption fold '?' (t -> t) in
+                expect result toBe '?'
+        }
+        it "expect (notChar 'a') with a [a] sequence to return a failure" {
+            let result = notChar 'a' parse "a" 0 toOption fold '?' (t -> t) in
+                expect result toBe '?'
+        }
+        it "expect (notChar 'a') with a [A] sequence to return 'A'" {
+            let result = notChar 'a' parse "A" 0 toOption fold '?' (t -> t) in
+                expect result toBe 'A'
+        }
+        it "expect (char 'A') with a [a] sequence to return a failure" {
+            let result = notChar 'a' parse "a" 0 toOption fold '?' (t -> t) in
+                expect result toBe '?'
+        }
+        it "expect (char 'A') with a [A] sequence to return 'A'" {
+            let result = notChar 'a' parse "A" 0 toOption fold '?' (t -> t) in
+                expect result toBe 'A'
+        }
+    done 
+}
+
+def builtinCombinedAssertions : TestLogger -> unit = l -> {
+    description l "Builtin Composed parsers"
+        it "expect (letter) with a [A] sequence to return 'A'" {
+            let result = letter parse "A" 0 toOption fold '?' (t -> t) in
+                expect result toBe 'A'
+        }
+        it "expect (letter) with a [a] sequence to return 'a'" {
+            let result = letter parse "a" 0 toOption fold '?' (t -> t) in
+                expect result toBe 'a'
+        }
+        it "expect (numberLiteral) with a [123az] sequence to return 123" {
+            let result = numberLiteral parse "123az" 0 toOption fold (-1) (t -> t) in
+                expect result toBe 123
+        }
+        it "expect (stringLiteral) with a [\"123\"] sequence to return \"123\"" {
+            let result = stringLiteral parse "\"123\"" 0 toOption fold "" (t -> t) in
+                expect result toBe "123"
+        }
+        it "expect (charLiteral) with a ['a'] sequence to return 'a'" {
+            let result = charLiteral parse "'a'" 0 toOption fold '?' (t -> t) in
+                expect result toBe 'a'
+        }
+    done 
+}
+
+def testSuite : TestLogger -> unit = logger -> {
+    do {
+      List[
+        builtinBasicAssertions; 
+        builtinCombinedAssertions
+      ] each $ r -> r logger
+    } return ()
+}
+
+testSuite consoleLogger
