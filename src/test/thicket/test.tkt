@@ -13,12 +13,9 @@ import Test.Token
 import Test.Tokenizer
 
 do {
-    testSuite from Test.Parsec consoleLogger
-}; 
-{
-    testSuite from Test.Token consoleLogger
-}; 
-{
-    testSuite from Test.Tokenizer consoleLogger
+  List[
+    testSuite from Test.Parsec;
+    testSuite from Test.Token;
+    testSuite from Test.Tokenizer
+  ] each $ r -> r consoleLogger
 } return ()
-
