@@ -8,13 +8,17 @@
 
 module Test
 
-import Test.Data.Parsec
-import Test.Data.Token
+import Test.Parsec
+import Test.Token
+import Test.Tokenizer
 
 do {
-    testSuite from Test.Data.Parsec consoleLogger
+    testSuite from Test.Parsec consoleLogger
 }; 
 {
-    testSuite from Test.Data.Token consoleLogger
+    testSuite from Test.Token consoleLogger
+}; 
+{
+    testSuite from Test.Tokenizer consoleLogger
 } return ()
 

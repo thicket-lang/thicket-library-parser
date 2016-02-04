@@ -26,7 +26,7 @@ model GenlexFactory[a] {
     char    : char   -> a
 }
 
-class genlex keywords:option[list[string]] {
+class genlex keywords:list[string] {
 
     generate : [b] Sequence[char] -> GenlexFactory[b] -> try[Sequence[b]]
     
@@ -42,7 +42,7 @@ class genlex keywords:option[list[string]] {
         self.space* map (_ -> ())
 
     def keyword : [b] GenlexFactory[b] -> Parser[b,char] = t ->
-        keywords orElse emptyList foldR (k p -> aString k | p) error map t.keyword
+        keywords foldR (k p -> aString k | p) error map t.keyword
 
     def ident : [b] GenlexFactory[b] -> Parser[b,char] = t ->
         letter ~ (aChar '_' | letter | digit *) 

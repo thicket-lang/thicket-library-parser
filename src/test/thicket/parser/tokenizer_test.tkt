@@ -1,0 +1,88 @@
+/*
+ * Thicket
+ * https://github.com/d-plaindoux/thicket
+ *
+ * Copyright (c) 2015-2016 Didier Plaindoux
+ * Licensed under the LGPL2 license.
+ */
+
+module Test.Tokenizer
+
+import Data
+
+import Parser.LL
+import Parser.Tokenizer
+import Parser.Token
+
+import System.Console
+import System.Runtime
+
+import Spec.Core
+import Spec.Logger.Console
+
+def tokenizerAssertions : TestLogger -> unit = l -> {
+    description l "Tokenizer parsers"
+        it "expect (tokenize \"\") to return a success" {
+            let result = tokenize (genlex emptyList) "" success in
+                expect result toBe true
+        }
+        it "expect (tokenize \"\") to return a sequence(0)" {
+            let result = tokenize (genlex emptyList) "" fold (t -> t) (_ -> emptyArray 0) in
+                expect (result length) toBe 0
+        }
+        it "expect (tokenize \" \t \") to return a sequence(0)" {
+            let result = tokenize (genlex emptyList) " \t " fold (t -> t) (_ -> emptyArray 0) in
+                expect (result length) toBe 0
+        }
+        it "expect (tokenize \"[\") to return a sequence(1)" {
+            let result = tokenize (genlex $ List["["]) "[" fold (t -> t) (_ -> emptyArray 0) in
+                expect (result length) toBe 1
+        }       
+        it "expect (tokenize \"[\") to return a [Keyword \"[\",...]" {
+            let result = tokenize (genlex $ List["["]) "[" fold (t -> t) (_ -> emptyArray 0) in
+                expect (tkKeyword match "[" parse result 0 toTry success) toBe true
+        }      
+        it "expect (tokenize \"123\") to return a [Number 123,...]" {
+            let result = tokenize (genlex emptyList) "123" fold (t -> t) (_ -> emptyArray 0) in
+                expect (tkNumber match 123 parse result 0 toTry success) toBe true
+        }
+        it "expect (tokenize \"123\") to return a sequence(1)" {
+            let result = tokenize (genlex emptyList) "123" fold (t -> t) (_ -> emptyArray 0) in
+                expect (result length) toBe 1
+        }
+        it "expect (tokenize \"123\") to return a [Number 123,...]" {
+            let result = tokenize (genlex emptyList) "123" fold (t -> t) (_ -> emptyArray 0) in
+                expect (tkNumber match 123 parse result 0 toTry success) toBe true
+        }
+        it "expect (tokenize \"'1'\") to return a sequence(1)" {
+            let result = tokenize (genlex emptyList) "'1'" fold (t -> t) (_ -> emptyArray 0) in
+                expect (result length) toBe 1
+        }
+        it "expect (tokenize \"'1'\") to return [Char '1',...]" {
+            let result = tokenize (genlex emptyList) "'1'" fold (t -> t) (_ -> emptyArray 0) in
+                expect (tkChar match '1' parse result 0 toTry success) toBe true
+        }
+        it "expect (tokenize \"\\\"test\\\"\") to return a sequence(1)" {
+            let result = tokenize (genlex emptyList) "\"test\"" fold (t -> t) (_ -> emptyArray 0) in
+                expect (result length) toBe 1
+        }
+        it "expect (tokenize \"\\\"test\\\"\") to return [String \"test\",...]" {
+            let result = tokenize (genlex emptyList) "\"test\"" fold (t -> t) (_ -> emptyArray 0) in
+                expect (tkString match "test" parse result 0 toTry success) toBe true
+        }      
+        it "expect (tokenize \"12 34\") to return a [Number 12,Number 34]" {
+            let result = tokenize (genlex emptyList) "12 34" fold (t -> t) (_ -> emptyArray 0) in
+                expect (tkNumber match 12 ~ (tkNumber match 34) ~ eos parse result 0 toTry success) toBe true
+        }
+    done 
+}
+
+def testSuite : TestLogger -> unit = logger -> {
+    do {
+      List[
+        tokenizerAssertions
+      ] each $ r -> r logger
+    } return ()
+}
+
+testSuite consoleLogger

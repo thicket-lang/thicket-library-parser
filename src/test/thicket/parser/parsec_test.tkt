@@ -6,17 +6,17 @@
  * Licensed under the LGPL2 license.
  */
 
-module Test.Data.Parsec
+module Test.Parsec
 
 import Data
-
-import Parser.LL
 
 import System.Console
 import System.Runtime
 
 import Spec.Core
 import Spec.Logger.Console
+
+import Parser.LL
 
 def builtinBasicAssertions : TestLogger -> unit = l -> {
     description l "Builtin Basic parsers"

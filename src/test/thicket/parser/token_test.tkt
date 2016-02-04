@@ -6,7 +6,7 @@
  * Licensed under the LGPL2 license.
  */
 
-module Test.Data.Token
+module Test.Token
 
 import Data
 
