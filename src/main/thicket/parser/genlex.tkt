@@ -61,8 +61,7 @@ class genlex keywords:option[list[string]] {
         (self.keyword t) | (self.ident t) | (self.number t) | (self.string t) | (self.char t)
 
     def tokens : [b] GenlexFactory[b] -> Parser[Sequence[b],char] = t ->
-        // self.spaces ~> ((self.token t) <~ self.spaces *) <~ eos
-        (self.token t *) <~ eos
+        self.spaces ~> ((self.token t) <~ self.spaces *) <~ eos
         map (o -> list2sequence $ o orElse emptyList)
 
     //
