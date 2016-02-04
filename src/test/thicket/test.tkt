@@ -9,8 +9,12 @@
 module Test
 
 import Test.Data.Parsec
+import Test.Data.Token
 
 do {
     testSuite from Test.Data.Parsec consoleLogger
+}; 
+{
+    testSuite from Test.Data.Token consoleLogger
 } return ()
 

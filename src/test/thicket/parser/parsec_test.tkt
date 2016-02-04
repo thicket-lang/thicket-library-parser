@@ -69,11 +69,11 @@ def builtinBasicAssertions : TestLogger -> unit = l -> {
                 expect result toBe 'A'
         }
         it "expect (char 'A') with a [a] sequence to return a failure" {
-            let result = notChar 'a' parse "a" 0 toOption fold '?' (t -> t) in
+            let result = aChar 'A' parse "a" 0 toOption fold '?' (t -> t) in
                 expect result toBe '?'
         }
         it "expect (char 'A') with a [A] sequence to return 'A'" {
-            let result = notChar 'a' parse "A" 0 toOption fold '?' (t -> t) in
+            let result = aChar 'A' parse "A" 0 toOption fold '?' (t -> t) in
                 expect result toBe 'A'
         }
     done 

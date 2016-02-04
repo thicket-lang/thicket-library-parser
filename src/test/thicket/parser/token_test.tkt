@@ -1,0 +1,109 @@
+/*
+ * Thicket
+ * https://github.com/d-plaindoux/thicket
+ *
+ * Copyright (c) 2015-2016 Didier Plaindoux
+ * Licensed under the LGPL2 license.
+ */
+
+module Test.Data.Token
+
+import Data
+
+import Parser.Token
+
+import System.Console
+import System.Runtime
+
+import Spec.Core
+import Spec.Logger.Console
+
+def tokenAssertions : TestLogger -> unit = l -> {
+    description l "Token parsers"
+        it "expect (tkKeyword) to return an success" {
+            let tokens = List[(Keyword "{")] in
+            let result = tkKeyword parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkKeyword match \"{\"}) to return an success" {
+            let tokens = List[(Keyword "{")] in
+            let result = tkKeyword match "{" parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkKeyword match \"[\"}) to return a failure" {
+            let tokens = List[(Keyword "{")] in
+            let result = tkKeyword match "[" parse tokens 0 toTry success in
+                expect result toBe false
+        }
+        it "expect (tkIdent) to return an success" {
+            let tokens = List[(Ident "test")] in
+            let result = tkIdent parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkIdent match \"test\") to return an success" {
+            let tokens = List[(Ident "test")] in
+            let result = tkIdent match "test" parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkIdent match \"tester\") to return an success" {
+            let tokens = List[(Ident "test")] in
+            let result = tkIdent match "tester" parse tokens 0 toTry success in
+                expect result toBe false
+        }
+        it "expect (tkNumber) to return an success" {
+            let tokens = List[(Number 123)] in
+            let result = tkNumber parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkNumber match 123) to return an success" {
+            let tokens = List[(Number 123)] in
+            let result = tkNumber match 123 parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkNumber match 1234) to return a failure" {
+            let tokens = List[(Number 123)] in
+            let result = tkNumber match 1234 parse tokens 0 toTry success in
+                expect result toBe false
+        }
+        it "expect (tkString) to return an success" {
+            let tokens = List[(String "test")] in
+            let result = tkString parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkString match \"test\") to return an success" {
+            let tokens = List[(String "test")] in
+            let result = tkString match "test" parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkString match \"tester\") to return a failure" {
+            let tokens = List[(String "test")] in
+            let result = tkString match "tester" parse tokens 0 toTry success in
+                expect result toBe false
+        }
+        it "expect (tkChar) to return an success" {
+            let tokens = List[(Char 't')] in
+            let result = tkChar parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkChar match 't') to return an success" {
+            let tokens = List[(Char 't')] in
+            let result = tkChar match 't' parse tokens 0 toTry success in
+                expect result toBe true
+        }
+        it "expect (tkChar match 'u') to return a failure" {
+            let tokens = List[(Char 't')] in
+            let result = tkChar match 'u' parse tokens 0 toTry success in
+                expect result toBe false
+        }
+    done 
+}
+
+def testSuite : TestLogger -> unit = logger -> {
+    do {
+      List[
+        tokenAssertions
+      ] each $ r -> r logger
+    } return ()
+}
+
+testSuite consoleLogger
