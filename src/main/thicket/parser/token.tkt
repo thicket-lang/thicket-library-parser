@@ -62,19 +62,19 @@ class tokenPrettyPrinter this:Token {
     def Char.toString    = $"Char($(this._))"
 }
 
-def aLiteral : [a] (Token -> option[a]) -> Parser[a,Token] = projection -> {
+def aLiteral : [a] (token -> option[a]) -> Parser[a,Token] = projection -> {
     parser $ input index ->
         input get index fold 
             (reject index false)
-            (token -> projection token fold 
+            (t -> projection (token t) fold 
                 (reject index false)
                 (value -> accept value input (index++) true)
             )
 }
 
-def tkKeyword : Parser[string,Token] = { aLiteral $ t -> token t keyword }
-def tkIdent   : Parser[string,Token] = { aLiteral $ t -> token t ident   }
-def tkNumber  : Parser[number,Token] = { aLiteral $ t -> token t number  }
-def tkNumber  : Parser[number,Token] = { aLiteral $ t -> token t number  }
-def tkString  : Parser[string,Token] = { aLiteral $ t -> token t string  }
-def tkChar    : Parser[char,Token]   = { aLiteral $ t -> token t char    }
+def tkKeyword : Parser[string,Token] = { aLiteral token::keyword }
+def tkIdent   : Parser[string,Token] = { aLiteral token::ident   }
+def tkNumber  : Parser[number,Token] = { aLiteral token::number  }
+def tkNumber  : Parser[number,Token] = { aLiteral token::number  }
+def tkString  : Parser[string,Token] = { aLiteral token::string  }
+def tkChar    : Parser[char,Token]   = { aLiteral token::char    }

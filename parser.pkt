@@ -11,6 +11,8 @@
     "modules": [
         "Parser.LL",
         "Parser.Genlex",
+        "Parser.Token",
+        "Parser.Tokenizer",
         "Parser.JSon"
     ],
     "requires":[
