@@ -175,6 +175,10 @@ def trace : [a,c] string -> Parser[a,c] -> Parser[a,c] = s -> {
 // Basic parsers
 //
 
+def lazy : [a,c] Parser[a,c] -> Parser[a,c] = {
+    do {} return
+}
+
 def return : [a,c] a -> Parser[a,c] = a -> {
     parser $ input index -> 
         accept a input index false
