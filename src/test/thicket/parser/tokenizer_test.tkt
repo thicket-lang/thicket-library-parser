@@ -81,10 +81,20 @@ def tokenizerAssertions : TestLogger -> unit = l -> {
     done 
 }
 
+def tokenizerPerformance : TestLogger -> unit = l -> {
+    description l "Tokenizer performance"
+        it "expect (tokenize LONG_STREAM) to return a success" {
+            let result = tokenize (genlex emptyList) ("1 " * 128) success in
+                expect result toBe true
+        }
+    done
+}
+
 def testSuite : TestLogger -> unit = logger -> {
     do {
       List[
-        tokenizerAssertions
+        tokenizerAssertions;
+        tokenizerPerformance
       ] each $ r -> r logger
     } return ()
 }
