@@ -78,3 +78,5 @@ def tkNumber  : Parser[number,Token] = { aLiteral token::number  }
 def tkNumber  : Parser[number,Token] = { aLiteral token::number  }
 def tkString  : Parser[string,Token] = { aLiteral token::string  }
 def tkChar    : Parser[char,Token]   = { aLiteral token::char    }
+
+def tkKey : string -> Parser[string,Token] = { tkKeyword match }
