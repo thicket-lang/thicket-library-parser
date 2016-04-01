@@ -180,8 +180,7 @@ def lazy : [a,c] Parser[a,c] -> Parser[a,c] = {
 }
 
 def return : [a,c] a -> Parser[a,c] = a -> {
-    parser $ input index -> 
-        accept a input index false
+    parser $ input index -> accept a input index false
 }
 
 def error : [a,c] Parser[a,c] = {
