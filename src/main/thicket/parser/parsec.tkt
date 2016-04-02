@@ -251,7 +251,7 @@ def numberLiteral : Parser[number,char] = {
 
 def aString : string -> Parser[string,char] = w -> {
     parser $ input offset ->
-        w subStringAt input offset fold
+        input subSequenceAt w offset fold
         (accept w input (w length + offset) true)
         (reject offset false)
 }
