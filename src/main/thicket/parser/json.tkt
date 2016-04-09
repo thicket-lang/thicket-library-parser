@@ -32,7 +32,7 @@ def jsonArray : Parser[list[JSon],Token] = {
 }
 
 def jsonObject : Parser[list[(string,JSon)],Token] = {
-  (tkString ~ (tkKeyword match ":" ~> jsonExpr) ~ (tkKeyword match "," ~> jsonObject ?)
+  (tkString ~ (tkKey ":" ~> jsonExpr) ~ (tkKey "," ~> jsonObject ?)
         map $ r -> r._2 fold emptyList (l -> l) +: r._1)
 | (return emptyList)
 }
@@ -40,8 +40,8 @@ def jsonObject : Parser[list[(string,JSon)],Token] = {
 def jsonExpr : Parser[JSon,Token] = {
   (tkNumber map JSonNumber)        
 | (tkString map JSonString)        
-| (tkKeyword match "[" ~> jsonArray <~ (tkKeyword match "]") map JSonArray)
-| (tkKeyword match "{" ~> jsonObject <~ (tkKeyword match "}") map JSonObject)
+| (tkKey "[" ~> jsonArray  <~ (tkKey "]") map JSonArray)
+| (tkKey "{" ~> jsonObject <~ (tkKey "}") map JSonObject)
 | (tkIdent match "null" map $ _ -> JSonNull)       
 }
 

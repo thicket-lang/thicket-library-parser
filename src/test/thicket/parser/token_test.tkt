@@ -18,7 +18,7 @@ import System.Runtime
 import Spec.Core
 import Spec.Logger.Console
 
-def tokenAssertions : TestLogger -> unit = l -> {
+def tokenAssertions : TestLogger -> TestContext = l -> {
     description l "Token parsers"
         it "expect (tkKeyword) to return an success" {
             let tokens = List[(Keyword "{")] in

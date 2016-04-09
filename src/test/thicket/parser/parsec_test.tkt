@@ -18,10 +18,10 @@ import Spec.Logger.Console
 
 import Parser.LL
 
-def builtinBasicAssertions : TestLogger -> unit = l -> {
+def builtinBasicAssertions : TestLogger -> TestContext = l -> {
     description l "Builtin Basic parsers"
         it "expect (error) to return an error" {
-            let result = error parse "" 0 toTry success in
+            let result = error from Parser.LL parse "" 0 toTry success in
                 expect result toBe false
         }
         it "expect (return true) to return a success" {
@@ -79,7 +79,7 @@ def builtinBasicAssertions : TestLogger -> unit = l -> {
     done 
 }
 
-def builtinCombinedAssertions : TestLogger -> unit = l -> {
+def builtinCombinedAssertions : TestLogger -> TestContext = l -> {
     description l "Builtin Composed parsers"
         it "expect (letter) with a [A] sequence to return 'A'" {
             let result = letter parse "A" 0 toOption fold '?' (t -> t) in
@@ -113,7 +113,7 @@ def builtinCombinedAssertions : TestLogger -> unit = l -> {
 }
 
 
-def sequenceAssertions : TestLogger -> unit = l -> {
+def sequenceAssertions : TestLogger -> TestContext = l -> {
     description l "Sequence parsers"
         it "expect (letter ~ digit) with a [A,1] sequence to return ('A','1')" {
             let result = letter ~ digit parse "A1" 0 toOption fold ('?','?') (t -> t) in
@@ -131,7 +131,7 @@ def sequenceAssertions : TestLogger -> unit = l -> {
     done 
 }
 
-def choiceAssertions : TestLogger -> unit = l -> {
+def choiceAssertions : TestLogger -> TestContext = l -> {
     description l "Choice parsers"
         it "expect (letter | digit) with a [A] sequence to return 'A'" {
             let result = letter | digit parse "A" 0 toOption fold '?' (t -> t) in
@@ -144,7 +144,7 @@ def choiceAssertions : TestLogger -> unit = l -> {
     done 
 }
 
-def occurenceAssertions : TestLogger -> unit = l -> {
+def occurenceAssertions : TestLogger -> TestContext = l -> {
     description l "Occurence parsers"
         it "expect (letter?) with a [A] sequence to return (some 'A')" {
             let result = letter? parse "A" 0 toOption fold '?' (t -> t fold ' ' (t -> t)) in
@@ -181,7 +181,7 @@ def occurenceAssertions : TestLogger -> unit = l -> {
     done 
 }
 
-def ll1Assertions : TestLogger -> unit = l -> {
+def ll1Assertions : TestLogger -> TestContext = l -> {
     description l "Choice parsers"
         it "expect (letter <~ letter | letter) with a [AA] sequence to return 'A'" {
             let result = letter <~ letter | letter parse "AA" 0 toOption fold '?' (t -> t) in

@@ -20,7 +20,7 @@ import System.Runtime
 import Spec.Core
 import Spec.Logger.Console
 
-def tokenizerAssertions : TestLogger -> unit = l -> {
+def tokenizerAssertions : TestLogger -> TestContext = l -> {
     description l "Tokenizer parsers"
         it "expect (tokenize \"\") to return a success" {
             let result = tokenize (genlex emptyList) "" success in
@@ -81,7 +81,7 @@ def tokenizerAssertions : TestLogger -> unit = l -> {
     done 
 }
 
-def tokenizerPerformance : TestLogger -> unit = l -> {
+def tokenizerPerformance : TestLogger -> TestContext = l -> {
     description l "Tokenizer performance"
         it "expect (tokenize LONG_STREAM) to return a success" {
             let result = tokenize (genlex emptyList) ("1 " * 128) success in
